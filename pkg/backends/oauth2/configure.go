@@ -45,6 +45,8 @@ type Config struct {
 
 	Scopes []string `json:"scopes,omitempty"`
 
+	DisableKeyVerification bool `json:"disable_key_verification,omitempty"`
+
 	// The number if seconds to wait before getting key material
 	// from an OAuth 2.0 backend.
 	DelayStart int `json:"delay_start,omitempty"`
@@ -124,6 +126,10 @@ func (b *Backend) Configure() error {
 			zap.Int("retry_attempts", b.Config.RetryAttempts),
 			zap.Int("retry_interval", b.Config.RetryInterval),
 		)
+	}
+
+	if b.Config.DisableKeyVerification {
+		b.disableKeyVerification = true
 	}
 
 	if len(b.Config.Scopes) < 1 {
